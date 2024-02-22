@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/layarda-cc/release-please-test-final/compare/v1.0.0...v1.0.1) (2024-02-22)
+
+
+### Bug Fixes
+
+* add another txt ([0bdfba3](https://github.com/layarda-cc/release-please-test-final/commit/0bdfba3e3c89f3273b380693d2e62a72b99be2e2))
+
 ## 1.0.0 (2024-02-22)
 
 
