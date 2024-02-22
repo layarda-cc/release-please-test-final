@@ -30,45 +30,41 @@ jobs:
           else
             echo "config=release-please-crm-patch-config.json" >> $GITHUB_OUTPUT
           fi
-            
-      - name: echoer
-        run: echo "${{steps.setter.outputs.config}}"
-      # - uses: google-github-actions/release-please-action@v4
-      #   id: release
-      #   name: Release Please CRM
-      #   with:
-      #     # this assumes that you have created a personal access token
-      #     # (PAT) and configured it as a GitHub action secret named
-      #     # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     # optional. customize path to release-please-config.json
-      #     config-file:  ${{ steps.setter.output.config }}
-           
-      #     # optional. customize path to .release-please-manifest.json
-      #     manifest-file: .release-please-manifest.json
-      #     target-branch: ${{ github.ref_name }}
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        name: Release Please CRM
+        with:
+          # this assumes that you have created a personal access token
+          # (PAT) and configured it as a GitHub action secret named
+          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # optional. customize path to release-please-config.json
+          config-file:  ${{ steps.setter.output.config }}
+          # optional. customize path to .release-please-manifest.json
+          manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
       
-      # - name: sync change log to trunk
-      #   if: ${{ steps.release.outputs.release_created }}
-      #   uses: actions/github-script@v7
-      #   id: sync
-      #   env:
-      #       TRUNK_BRANCH: main
-      #       SOURCE_BRANCH: '${{ github.ref_name }}'
-      #       TAG_VERSION: '${{ steps.release.outputs.tag_name }}'
-      #   with:
-      #     script: |
-      #       const { TRUNK_BRANCH, SOURCE_BRANCH, TAG_VERSION } = process.env
+      - name: sync change log to trunk
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/github-script@v7
+        id: sync
+        env:
+            TRUNK_BRANCH: main
+            SOURCE_BRANCH: '${{ github.ref_name }}'
+            TAG_VERSION: '${{ steps.release.outputs.tag_name }}'
+        with:
+          script: |
+            const { TRUNK_BRANCH, SOURCE_BRANCH, TAG_VERSION } = process.env
             
-      #       const pr = await github.rest.pulls.create({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         title: `Update changelog ${TAG_VERSION} to trunk`,
-      #         body: `:writing_hand: Updating release changelog ${TAG_VERSION} to trunkbase`,
-      #         head: SOURCE_BRANCH,
-      #         base: TRUNK_BRANCH,
-      #       })
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Update changelog ${TAG_VERSION} to trunk`,
+              body: `:writing_hand: Updating release changelog ${TAG_VERSION} to trunkbase`,
+              head: SOURCE_BRANCH,
+              base: TRUNK_BRANCH,
+            })
 
-      #       console.log(pr)
+            console.log(pr)
 
         
