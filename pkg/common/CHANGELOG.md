@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/layarda-cc/release-please-test-final/compare/pkg/common/v0.1.0...pkg/common/v0.2.0) (2024-02-22)
+
+
+### Features
+
+* pkg-common new ([64cc718](https://github.com/layarda-cc/release-please-test-final/commit/64cc7182d39befc59fe85603bede2da583e3451e))
+
 ## [0.1.0](https://github.com/layarda-cc/release-please-test-final/compare/pkg/common-v0.0.1...pkg/common/v0.1.0) (2024-02-22)
 
 
