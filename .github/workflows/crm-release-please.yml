@@ -25,10 +25,9 @@ jobs:
       - name: set release please config
         id: setter 
         run: |
-          if [ "${{ github.event_name }}" == "push" ]; then
+          echo "config=release-please-crm-patch-config.json" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" == "create" ]; then
             echo "config=release-please-crm-config.json" >> "$GITHUB_OUTPUT"
-          else
-            echo "config=release-please-crm-patch-config.json" >> "$GITHUB_OUTPUT"
           fi
       - name: use ${{ steps.setter.outputs.config }}
         run: echo ${{ steps.setter.outputs.config }}
