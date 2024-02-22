@@ -30,8 +30,8 @@ jobs:
           else
             echo "config=release-please-crm-patch-config.json" >> $GITHUB_OUTPUT
           fi
-      - name: use ${{ steps.setter.output.config }}
-        run: echo 
+      - name: use ${{ steps.setter.outputs.config }}
+        run: echo ${{ steps.setter.outputs.config }}
       # - uses: google-github-actions/release-please-action@v4
       #   id: release
       #   name: Release Please CRM
