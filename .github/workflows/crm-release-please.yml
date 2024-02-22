@@ -12,38 +12,52 @@ permissions:
 
 jobs:
   release-please-crm:
+
     permissions:
       contents: write
       pull-requests: write
+
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/production/')
+
     steps:
+      - name: set release please config
+        id: setter 
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "config=release-please-crm-config.json" >> $GITHUB_OUTPUT
+          else
+            echo "config=release-please-crm-patch-config.json" >> $GITHUB_OUTPUT
+          fi
+            
       - uses: google-github-actions/release-please-action@v4
         id: release
         name: Release Please CRM
         with:
-          if: startsWith(github.ref, 'refs/heads/production/')
           # this assumes that you have created a personal access token
           # (PAT) and configured it as a GitHub action secret named
           # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
           token: ${{ secrets.GITHUB_TOKEN }}
           # optional. customize path to release-please-config.json
-          config-file: release-please-crm-config.json
+          config-file:  ${{ steps.setter.output.config }}
+           
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
+      
       - name: sync change log to trunk
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/github-script@v7
+        id: sync
         env:
             TRUNK_BRANCH: main
             SOURCE_BRANCH: '${{ github.ref_name }}'
-            TAG_VERSION: '${{ steps.release.outputs.tag_name }}' 
+            TAG_VERSION: '${{ steps.release.outputs.tag_name }}'
         with:
           script: |
             const { TRUNK_BRANCH, SOURCE_BRANCH, TAG_VERSION } = process.env
             
-            await github.rest.pulls.create({
+            const pr = await github.rest.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `Update changelog ${TAG_VERSION} to trunk`,
@@ -51,5 +65,7 @@ jobs:
               head: SOURCE_BRANCH,
               base: TRUNK_BRANCH,
             })
+
+            console.log(pr)
 
         
