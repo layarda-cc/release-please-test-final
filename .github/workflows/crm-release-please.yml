@@ -1,0 +1,53 @@
+name: CRM Release Please
+
+on:
+  push:
+    branches:
+      - production/*
+  create:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please-crm:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/production/')
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        name: Release Please CRM
+        with:
+          if: startsWith(github.ref, 'refs/heads/production/')
+          # this assumes that you have created a personal access token
+          # (PAT) and configured it as a GitHub action secret named
+          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # optional. customize path to release-please-config.json
+          config-file: release-please-crm-config.json
+          # optional. customize path to .release-please-manifest.json
+          manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
+      - name: sync change log to trunk
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/github-script@v7
+        env:
+            TRUNK_BRANCH: main
+            SOURCE_BRANCH: '${{ github.ref_name }}'
+            TAG_VERSION: '${{ steps.release.outputs.tag_name }}' 
+        with:
+          script: |
+            await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Update changelog ${TAG_VERSION} to trunk`,
+              body: `:writing_hand: Updating release changelog ${TAG_VERSION} to trunkbase`,
+              head: SOURCE_BRANCH,
+              base: TRUNK_BRANCH,
+            })
+
+        

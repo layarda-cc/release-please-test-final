@@ -1,0 +1,55 @@
+{
+  "packages": {
+    ".": {
+      "component": "Draft",
+      "changelog-path": "CHANGELOG.md",
+      "exclude-paths": [
+        "/pkg/common"
+      ],
+      "bump-minor-pre-major": false,
+      "bump-patch-for-minor-pre-major": false,
+      "prerelease": false,
+      "release-type": "simple",
+      "changelog-type": "default",
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Features",
+          "hidden": false
+        },
+        {
+          "type": "fix",
+          "section": "Bug Fixes",
+          "hidden": false
+        },
+        {
+          "type": "chore",
+          "section": "Trivial Changes",
+          "hidden": false
+        },
+        {
+          "type": "docs",
+          "section": "Documentation",
+          "hidden": false
+        },
+        {
+          "type": "deps",
+          "section": "Dependencies",
+          "hidden": false
+        },
+        {
+          "type": "refactor",
+          "section": "Refactors",
+          "hidden": false
+        }
+      ],
+      "pull-request-title-pattern": "${component} Release CRM ${version}",
+      "pull-request-header": ":no_entry_sign: This is only draft release, do not merge :no_entry_sign:",
+      "extra-label": "production::draft-crm",
+      "draft": true,
+      "draft-pull-request": true,
+      "include-component-in-tag": true
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}

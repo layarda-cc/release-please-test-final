@@ -1,0 +1,42 @@
+name: Package Common Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please-pkg-common:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            pkg-common:
+              - 'pkg/common/**'
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        name: Release Please PKG/COMMON
+        if: ${{ steps.changes.outputs.pkg-common == 'true' }}
+        with:
+          # this assumes that you have created a personal access token
+          # (PAT) and configured it as a GitHub action secret named
+          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # optional. customize path to release-please-config.json
+          config-file: release-please-pkg-common-config.json
+          # optional. customize path to .release-please-manifest.json
+          manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
+          
