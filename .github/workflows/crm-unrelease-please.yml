@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         name: Checkout to unrelease/draft branch
         with:
-          ref: $DRAFT_BRANCH
+          ref: ${{ env.DRAFT_BRANCH }}
       - name: rebase from trunk
         run: |
           git config user.name github-actions[bot]
@@ -50,4 +50,4 @@ jobs:
           config-file: unrelease-please-config.json
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
-          target-branch: $DRAFT_BRANCH
+          target-branch: ${{ env.DRAFT_BRANCH }}
