@@ -41,6 +41,8 @@ jobs:
             TAG_VERSION: '${{ steps.release.outputs.tag_name }}' 
         with:
           script: |
+            const { TRUNK_BRANCH, SOURCE_BRANCH, TAG_VERSION } = process.env
+            
             await github.rest.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
