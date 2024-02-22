@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/layarda-cc/release-please-test-final/compare/v1.0.0...v1.1.0) (2024-02-22)
+
+
+### Features
+
+* new feat ([123e7e2](https://github.com/layarda-cc/release-please-test-final/commit/123e7e2e6117a5efe244cd5f457dc52c6a0023b6))
+
+
+### Bug Fixes
+
+* new fix ([9fc228e](https://github.com/layarda-cc/release-please-test-final/commit/9fc228ebb6c5af703a3af50ff04c3190f1ef07fb))
+* something ([28e0027](https://github.com/layarda-cc/release-please-test-final/commit/28e00273a2029cf90f5f12400c827cc64f655265))
+
 ## 1.0.0 (2024-02-22)
 
 
