@@ -1,7 +1,6 @@
 {
   "packages": {
     ".": {
-      "component": "Draft",
       "changelog-path": "CHANGELOG.md",
       "exclude-paths": [
         "/pkg/common"
@@ -51,5 +50,6 @@
       "include-component-in-tag": true
     }
   },
+  // "last-release-sha": "",
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
