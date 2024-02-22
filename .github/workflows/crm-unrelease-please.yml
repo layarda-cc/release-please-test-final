@@ -10,9 +10,9 @@ permissions:
 jobs:
   crm-unrelease-please:
     runs-on: ubuntu-latest
-    env:
-        TRUNK_BRANCH: main
-        DRAFT_BRANCH: draft/release
+    # env:
+    #     TRUNK_BRANCH: main
+    #     DRAFT_BRANCH: draft/release
 
     steps:
       # - uses: actions/checkout@v4
@@ -50,4 +50,4 @@ jobs:
           config-file: unrelease-please-config.json
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
-          target-branch: ${{ env.DRAFT_BRANCH }}
+          # target-branch: ${{ env.DRAFT_BRANCH }}
