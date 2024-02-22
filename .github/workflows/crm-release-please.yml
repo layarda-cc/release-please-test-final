@@ -13,14 +13,15 @@ permissions:
 
 jobs:
   release-please-crm:
-
     permissions:
       contents: write
       pull-requests: write
 
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/production/')
-
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: set release please config
         id: setter 
@@ -43,15 +44,52 @@ jobs:
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
-      
-      - name: sync change log to trunk
-        if: ${{ steps.release.outputs.release_created }}
+
+  changelog-syncer:
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    needs: release-please-crm
+    runs-on: ubuntu-latest
+    if: ${{ needs.release-please-crm.outputs.release_created }}
+    env:
+      TRUNK_BRANCH: main
+      SOURCE_BRANCH: syncer-production-${{ needs.release-please-crm.outputs.tag_name }}-changelog
+      TAG_VERSION: '${{ needs.release-please-crm.outputs.tag_name }}'
+    steps:
+      # add process to create new branch
+      - uses: actions/checkout@v4
+        name: checkout to current branch
+      - name: create syncer branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
+          git checkout -b ${{ env.SOURCE_BRANCH }}
+          git push
+      - uses: actions/checkout@v4
+        name: checkout to syncer branch
+        with:
+          ref: ${{ env.SOURCE_BRANCH }}
+      - name: revert manifest version patch
+        run: |
+          # Extract major and minor versions from version.json
+          version=$(jq -r '.["."]' .release-please-manifest.json)
+          major_minor=$(echo "$version" | cut -d '.' -f 1,2)
+
+          # Construct the updated version with patch set to 0
+          updated_version="${major_minor}.0"
+
+          # Update the value in the .release-please-manifest.json file
+          jq --arg updated_version "$updated_version" '.["."] = $updated_version' .release-please-manifest.json > temp.json && mv temp.json .release-please-manifest.json
+          
+          git commit -m "revert manifest version patch"
+          git push
+      - name: pr sync to trunk
+        if: ${{ needs.release-please-crm.outputs.release_created }}
         uses: actions/github-script@v7
-        id: sync
-        env:
-            TRUNK_BRANCH: main
-            SOURCE_BRANCH: '${{ github.ref_name }}'
-            TAG_VERSION: '${{ steps.release.outputs.tag_name }}'
+        id: sync 
         with:
           script: |
             const { TRUNK_BRANCH, SOURCE_BRANCH, TAG_VERSION } = process.env
@@ -66,5 +104,3 @@ jobs:
             })
 
             console.log(pr)
-
-        

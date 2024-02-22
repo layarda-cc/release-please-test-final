@@ -15,28 +15,28 @@ jobs:
         DRAFT_BRANCH: draft/release
 
     steps:
-      - uses: actions/checkout@v4
-        name: Checkout to unrelease/draft branch
-        with:
-          ref: ${{ env.DRAFT_BRANCH }}
-      - name: rebase from trunk
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
-          git rebase refs/remotes/origin/$TRUNK_BRANCH
-          git push
-      - name: revert manifest version patch
-        run: |
-          # Extract major and minor versions from version.json
-          version=$(jq -r '.["."]' .release-please-manifest.json)
-          major_minor=$(echo "$version" | cut -d '.' -f 1,2)
+      # - uses: actions/checkout@v4
+      #   name: Checkout to unrelease/draft branch
+      #   with:
+      #     ref: ${{ env.DRAFT_BRANCH }}
+      # - name: rebase from trunk
+      #   run: |
+      #     git config user.name github-actions[bot]
+      #     git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      #     git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
+      #     git rebase refs/remotes/origin/$TRUNK_BRANCH
+      #     git push
+      # - name: revert manifest version patch
+      #   run: |
+      #     # Extract major and minor versions from version.json
+      #     version=$(jq -r '.["."]' .release-please-manifest.json)
+      #     major_minor=$(echo "$version" | cut -d '.' -f 1,2)
 
-          # Construct the updated version with patch set to 0
-          updated_version="${major_minor}.0"
+      #     # Construct the updated version with patch set to 0
+      #     updated_version="${major_minor}.0"
 
-          # Update the value in the .release-please-manifest.json file
-          jq --arg updated_version "$updated_version" '.["."] = $updated_version' .release-please-manifest.json > temp.json && mv temp.json .release-please-manifest.json
+      #     # Update the value in the .release-please-manifest.json file
+      #     jq --arg updated_version "$updated_version" '.["."] = $updated_version' .release-please-manifest.json > temp.json && mv temp.json .release-please-manifest.json
 
       - uses: google-github-actions/release-please-action@v4
         id: release
