@@ -12,20 +12,24 @@ permissions:
 
 jobs:
   release-please-crm:
+
     permissions:
       contents: write
       pull-requests: write
+
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/production/')
+
     steps:
       - name: set release please config
-        id: setter
+        id: setter 
         run: |
-        if [ "${{ github.event_name }}" == "push" ]; then
-          echo "config=release-please-crm-config.json" >> $GITHUB_OUTPUT
-        else
-          echo "config=release-please-crm-patch-config.json" >> $GITHUB_OUTPUT
-        fi
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "config=release-please-crm-config.json" >> $GITHUB_OUTPUT
+          else
+            echo "config=release-please-crm-patch-config.json" >> $GITHUB_OUTPUT
+          fi
+            
       - uses: google-github-actions/release-please-action@v4
         id: release
         name: Release Please CRM
@@ -40,6 +44,7 @@ jobs:
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
+      
       - name: sync change log to trunk
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/github-script@v7
