@@ -84,6 +84,7 @@ jobs:
           # Update the value in the .release-please-manifest.json file
           jq --arg updated_version "$updated_version" '.["."] = $updated_version' .release-please-manifest.json > temp.json && mv temp.json .release-please-manifest.json
           
+          git add .
           git commit -m "revert manifest version patch"
           git push
       - name: pr sync to trunk
