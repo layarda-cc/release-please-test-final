@@ -17,7 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout to unrelease/draft branch
-        ref: $DRAFT_BRANCH
+        with:
+          ref: $DRAFT_BRANCH
       - name: rebase from trunk
         run: |
           git config user.name github-actions[bot]
