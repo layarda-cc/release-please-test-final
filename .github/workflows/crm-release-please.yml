@@ -21,7 +21,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
-      pr_sha: ${{ toJson(fromJSON(steps.release.outputs.pr).sha) }}
+      # pr_sha: ${{ toJson(fromJSON(steps.release.outputs.pr).sha) }}
     steps:
       - name: set release please config
         id: setter 
@@ -47,7 +47,6 @@ jobs:
       - name: echoer
         run: |
           echo "${{ toJson(steps.release.outputs.pr) }}"
-          echo "${{ toJson(fromJSON(steps.release.outputs.pr).sha) }}"
 
   changelog-syncer:
     permissions:
