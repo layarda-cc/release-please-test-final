@@ -21,6 +21,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      pr_sha: ${{ toJson(steps.release.outputs.pr).sha }}
     steps:
       - name: set release please config
         id: setter 
@@ -43,6 +44,9 @@ jobs:
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
+      - uses: echoer
+        run: |
+          echo "${{ toJson(steps.release.outputs.pr).sha }}"
 
   changelog-syncer:
     permissions:
@@ -60,6 +64,8 @@ jobs:
       # add process to create new branch
       - uses: actions/checkout@v4
         name: checkout to current branch
+        with:
+          ref: ${{ env.TRUNK_BRANCH }}
       - name: create syncer branch
         run: |
           git config user.name github-actions[bot]
@@ -71,6 +77,9 @@ jobs:
         name: checkout to syncer branch
         with:
           ref: ${{ env.SOURCE_BRANCH }}
+      - name: cherry pick release commit
+        run: |
+
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
