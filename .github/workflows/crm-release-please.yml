@@ -47,6 +47,7 @@ jobs:
       - name: echoer
         run: |
           echo "${{ toJson(steps.release.outputs.pr) }}"
+          echo "${{ toJson(steps.release.outputs) }}"
 
   changelog-syncer:
     permissions:
