@@ -2,6 +2,10 @@
 
 ## 1.0.0 (2024-02-26)
 
+### Manually
+
+* manual 1
+* manual 2
 
 ### Features
 
