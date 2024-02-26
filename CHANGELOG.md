@@ -2,6 +2,10 @@
 
 ## 1.0.0 (2024-02-26)
 
+### Added Manually
+
+* added manually bro
+* again bro
 
 ### Features
 
