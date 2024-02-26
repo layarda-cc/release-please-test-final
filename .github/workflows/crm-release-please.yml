@@ -83,7 +83,7 @@ jobs:
         run: |
           sha=$(echo ${{env.CHERRY_PICK_SHA}} | cut -c 1-7)
           git pull
-          git rebase $sha
+          git rebase $sha || git rebase --continue
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
