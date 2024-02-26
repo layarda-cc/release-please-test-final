@@ -21,7 +21,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
-      # pr_sha: ${{ toJson(fromJSON(steps.release.outputs.pr).sha) }}
+      tag_sha: ${{ steps.release.outputs.sha }}
     steps:
       - name: set release please config
         id: setter 
@@ -44,10 +44,6 @@ jobs:
           # optional. customize path to .release-please-manifest.json
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
-      - name: echoer
-        run: |
-          echo "${{ toJson(steps.release.outputs.pr) }}"
-          echo "${{ toJson(steps.release.outputs) }}"
 
   changelog-syncer:
     permissions:
@@ -61,7 +57,7 @@ jobs:
       TRUNK_BRANCH: main
       SOURCE_BRANCH: syncer-production-${{ needs.release-please-crm.outputs.tag_name }}-changelog
       TAG_VERSION: '${{ needs.release-please-crm.outputs.tag_name }}'
-      CHERRY_PICK_SHA: '${{ needs.release-please-crm.outputs.pr_sha }}'
+      CHERRY_PICK_SHA: '${{ needs.release-please-crm.outputs.tag_sha }}'
     steps:
       # add process to create new branch
       - uses: actions/checkout@v4
@@ -81,7 +77,7 @@ jobs:
           ref: ${{ env.SOURCE_BRANCH }}
       - name: cherry pick release commit
         run: |
-          git cherry-pick ${{ env. CHERRY_PICK_SHA }}
+          git cherry-pick ${{ env.CHERRY_PICK_SHA }}
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
