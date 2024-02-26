@@ -46,9 +46,7 @@ jobs:
           target-branch: ${{ github.ref_name }}
       - name: echoer
         run: |
-          echo "${{ fromJSON(steps.release.outputs.pr).number }}"
-          echo "${{ fromJSON(steps.release.outputs.pr).title }}"
-          echo "${{ fromJSON(steps.release.outputs.pr).sha }}"
+          echo "${{ fromJSON(steps.release.outputs.pr) }}"
 
   changelog-syncer:
     permissions:
