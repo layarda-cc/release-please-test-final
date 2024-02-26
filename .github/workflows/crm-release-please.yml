@@ -62,6 +62,7 @@ jobs:
       TRUNK_BRANCH: main
       SOURCE_BRANCH: syncer-production-${{ needs.release-please-crm.outputs.tag_name }}-changelog
       TAG_VERSION: '${{ needs.release-please-crm.outputs.tag_name }}'
+      CHERRY_PICK_SHA: '${{ needs.release-please-crm.outputs.pr_sha }}'
     steps:
       # add process to create new branch
       - uses: actions/checkout@v4
@@ -81,7 +82,7 @@ jobs:
           ref: ${{ env.SOURCE_BRANCH }}
       - name: cherry pick release commit
         run: |
-
+          git cherry-pick ${{ env. CHERRY_PICK_SHA }}
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
