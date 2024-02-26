@@ -21,7 +21,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
-      pr_sha: ${{ toJson(steps.release.outputs.pr).sha }}
+      pr_sha: ${{ fromJSON(steps.release.outputs.pr).sha }}
     steps:
       - name: set release please config
         id: setter 
@@ -46,10 +46,9 @@ jobs:
           target-branch: ${{ github.ref_name }}
       - name: echoer
         run: |
-          echo "${{ toJson(steps.release.outputs.pr) }}"
-          echo "${{ toJson(steps.release.outputs.pr).number }}"
-          echo "${{ toJson(steps.release.outputs.pr).title }}"
-          echo "${{ toJson(steps.release.outputs.pr).sha }}"
+          echo "${{ fromJSON(steps.release.outputs.pr).number }}"
+          echo "${{ fromJSON(steps.release.outputs.pr).title }}"
+          echo "${{ fromJSON(steps.release.outputs.pr).sha }}"
 
   changelog-syncer:
     permissions:
