@@ -69,7 +69,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
-          git pull
+          git pull origin ${{ env.TRUNK_BRANCH }}
           if git ls-remote --exit-code origin "${{ env.SOURCE_BRANCH }}"; then
             git push origin --delete ${{ env.SOURCE_BRANCH }}
           fi
