@@ -78,7 +78,7 @@ jobs:
       - name: cherry pick release commit
         run: |
           sha=$(echo ${{env.CHERRY_PICK_SHA}} | cut -c 1-7)
-          git cherry-pick ${{ sha }}
+          git cherry-pick $sha
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
