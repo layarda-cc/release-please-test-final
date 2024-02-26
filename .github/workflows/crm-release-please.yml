@@ -83,7 +83,16 @@ jobs:
         run: |
           sha=$(echo ${{env.CHERRY_PICK_SHA}} | cut -c 1-7)
           git pull
-          git rebase $sha || git rebase --continue
+          git rebase $sha || {
+              git checkout --theirs CHANGELOG.md
+              conflicted_files=$(git diff --name-only --diff-filter=U)
+              for file in $conflicted_files; do
+                  git checkout --ours $file
+              done
+              git rebase --continue
+              git status
+              exit 0
+          }
       - name: revert manifest version patch
         run: |
           # Extract major and minor versions from version.json
